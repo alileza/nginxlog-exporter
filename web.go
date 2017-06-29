@@ -14,6 +14,7 @@ type web struct {
 	listenAddress string
 }
 
+// NewWebServer returns webserver
 func NewWebServer() *web {
 	w := &web{
 		mux:           http.NewServeMux(),

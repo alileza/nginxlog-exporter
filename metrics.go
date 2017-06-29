@@ -4,13 +4,15 @@ import "github.com/prometheus/client_golang/prometheus"
 
 var (
 	httpRequestCount = prometheus.NewCounterVec(prometheus.CounterOpts{
-		Name:        "http_requests_total",
-		Help:        "Number status 2xx",
+		Namespace:   cfg.Namespace,
+		Name:        "http_response_count_total",
+		Help:        "Amount of processed HTTP requests",
 		ConstLabels: prometheus.Labels{},
 	}, []string{"code", "method", "endpoint"})
-	httpResponseBodySizeBytes = prometheus.NewGaugeVec(prometheus.GaugeOpts{
-		Name:        "http_response_body_size_bytes",
-		Help:        "Response body size",
+	httpResponseBodySizeBytes = prometheus.NewCounterVec(prometheus.CounterOpts{
+		Namespace:   cfg.Namespace,
+		Name:        "http_response_size_bytes",
+		Help:        "Total amount of transferred bytes",
 		ConstLabels: prometheus.Labels{},
 	}, []string{"code", "method", "endpoint"})
 )

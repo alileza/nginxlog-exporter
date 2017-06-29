@@ -13,6 +13,7 @@ var cfg = struct {
 
 	configFile string `yaml:"-"`
 
+	Namespace     string `yaml:"namespace"`
 	ListenAddress string `yaml:"listen_address"`
 	MetricPath    string `yaml:"metric_path"`
 	LogPath       string `yaml:"log_path"`
@@ -20,6 +21,7 @@ var cfg = struct {
 
 	Routes []string `yaml:"routes"`
 }{
+	Namespace:     "nginxlog",
 	ListenAddress: ":9393",
 	MetricPath:    "/metrics",
 	LogPath:       "/var/log/nginx/access.log",
