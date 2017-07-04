@@ -2,8 +2,8 @@ package main
 
 import (
 	"flag"
+	"fmt"
 	"io/ioutil"
-	"log"
 
 	"gopkg.in/yaml.v2"
 )
@@ -12,6 +12,7 @@ var cfg = struct {
 	fs *flag.FlagSet `yaml:"-"`
 
 	configFile string `yaml:"-"`
+	debug      bool   `yaml:"-"`
 
 	Namespace     string `yaml:"namespace"`
 	ListenAddress string `yaml:"listen_address"`
@@ -28,10 +29,21 @@ var cfg = struct {
 	LogFormat:     `$remote_addr - $remote_user [$time_local] "$method $endpoint $http_version" $status $body_bytes_sent "$http_referer" "$http_user_agent"`,
 }
 
+func debug(t string, d ...interface{}) {
+	if !cfg.debug {
+		return
+	}
+	fmt.Printf(t+"\n", d...)
+}
+
 func init() {
 	flag.StringVar(
 		&cfg.configFile, "config.file", "nginxlog-exporter.yml",
 		"Nginxlog exporter configuration file name.",
+	)
+	flag.BoolVar(
+		&cfg.debug, "debug", false,
+		"Nginxlog exporter debug log.",
 	)
 	flag.Parse()
 
@@ -41,11 +53,15 @@ func init() {
 func readConfigFile() {
 	yamlFile, err := ioutil.ReadFile(cfg.configFile)
 	if err != nil {
-		log.Printf("failed to open %s : %s\n", cfg.configFile, err.Error())
+		debug("failed to open %s : %s\n", cfg.configFile, err.Error())
+		return
 	}
 
 	err = yaml.Unmarshal(yamlFile, &cfg)
 	if err != nil {
-		log.Printf("failed to unmarshal %s : %s\n", cfg.configFile, err.Error())
+		debug("failed to unmarshal %s : %s\n", cfg.configFile, err.Error())
+		return
 	}
+
+	debug("successfully load config : %+v", cfg)
 }

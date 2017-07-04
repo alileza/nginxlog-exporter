@@ -7,7 +7,7 @@ import (
 	"github.com/prometheus/client_golang/prometheus/promhttp"
 )
 
-type web struct {
+type Web struct {
 	mux *http.ServeMux
 
 	listenErrChan chan error
@@ -15,8 +15,8 @@ type web struct {
 }
 
 // NewWebServer returns webserver
-func NewWebServer() *web {
-	w := &web{
+func NewWebServer() *Web {
+	w := &Web{
 		mux:           http.NewServeMux(),
 		listenErrChan: make(chan error),
 		listenAddress: cfg.ListenAddress,
@@ -37,11 +37,11 @@ func NewWebServer() *web {
 	return w
 }
 
-func (w *web) Run() {
+func (w *Web) Run() {
 	log.Printf("Web Service is Listening on %s\n", w.listenAddress)
 	w.listenErrChan <- http.ListenAndServe(w.listenAddress, w.mux)
 }
 
-func (w *web) ListenError() <-chan error {
+func (w *Web) ListenError() <-chan error {
 	return w.listenErrChan
 }

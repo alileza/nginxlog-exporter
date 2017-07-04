@@ -18,6 +18,7 @@ func (t *Tailer) Run() {
 	file, err := tail.TailFile(cfg.LogPath, tail.Config{Follow: true})
 	if err != nil {
 		t.listenErrChan <- err
+		return
 	}
 
 	for line := range file.Lines {
